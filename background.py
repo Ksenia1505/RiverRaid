@@ -2,6 +2,8 @@ import pygame
 
 
 class Background:
+    """Фон"""
+
     def __init__(self, x, y, speed, width, height, window, background_image):
         self.x = x
         self.y = y
@@ -14,7 +16,10 @@ class Background:
         self.max_boost = 10
 
     def draw(self):
+        """Рисование"""
         self.y += self.speed
+
+        # управление скоростью
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             self.boost += 1

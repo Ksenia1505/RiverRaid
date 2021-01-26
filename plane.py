@@ -3,6 +3,8 @@ import shell
 
 
 class Plane:
+    """Самолет"""
+
     def __init__(self, x, y, window, window_width, window_height, w, h, plane_image):
         self.x = x
         self.y = y
@@ -21,7 +23,10 @@ class Plane:
         self.point_4 = []
 
     def draw(self):
+        """Рисование"""
         keys = pygame.key.get_pressed()
+
+        # управление самолетом
         if keys[pygame.K_LEFT]:
             self.x = max(self.x - 7, 5)
         elif keys[pygame.K_RIGHT]:

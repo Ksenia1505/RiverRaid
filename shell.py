@@ -2,6 +2,8 @@ import pygame
 
 
 class Shell:
+    """Снаряд"""
+
     def __init__(self, x, y, window_height, window):
         self.x = x
         self.y = y
@@ -13,5 +15,5 @@ class Shell:
         self.radius = 3
 
     def draw(self):
+        """Рисование"""
         pygame.draw.circle(self.window, self.color, (self.x, self.y), self.radius)
-        # pygame.draw.circle(self.window, self.background_color, (self.x, self.y + self.radius * 2), self.radius)

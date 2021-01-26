@@ -1,6 +1,9 @@
 import pygame
 
+
 class Ship:
+    """Корабль"""
+
     def __init__(self, x, y, window, window_width, direction, start_y):
         self.x = x
         self.y = y
@@ -20,6 +23,6 @@ class Ship:
         self.point_3 = []
         self.point_4 = []
 
-
     def draw(self):
+        """Рисование"""
         self.window.blit(self.ship_image, (self.x, self.y))
