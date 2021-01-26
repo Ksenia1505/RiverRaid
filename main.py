@@ -3,6 +3,7 @@ import background
 import plane
 import ship
 import function
+import database
 
 from tkinter import *
 from tkinter import messagebox
@@ -30,21 +31,14 @@ plane = plane.Plane(plane_x, plane_y, window, width, window_height, plane_w, pla
 direction = 'left'
 
 ships = []
-# ship_x = width - 500
-# ship_y = 0
-# ship_x = 500
-# ship_y = 400
-ships.append(ship.Ship(600, 0, window, width, direction, 800))
-ships.append(ship.Ship(0, 0, window, width, direction, 1500))
+database = database.Database()
+for coordinates in database.get_coordinates('ship'):
+    ships.append(ship.Ship(coordinates[0], coordinates[1], window, width, direction, coordinates[2]))
 
 animCount = 0
 run = True
 bullets = []
 lastMove = ''
-
-a = [[0, 1], [0, 10]]
-b = [[0, 11], [0, 100]]
-c = function.is_line_intersection(a, b)
 
 while run:
     clock.tick(30)
@@ -56,13 +50,6 @@ while run:
     pygame.draw.rect(window, (200, 200, 200),
                      (plane.x, plane.y, plane.w, plane.h))
     plane.draw()
-
-    # if plane.shell.x != -1:
-    #     plane.shell.draw()
-    #     if plane.shell.y > plane.shell.radius * 2:
-    #         plane.shell.y -= plane.shell.radius * 2
-    #     else:
-    #         plane.shell.x = -1
 
     for ship in ships:
         if ship.enabled and ship.start_y <= (background.height + background.y) and ship.y < window_height:
@@ -86,9 +73,8 @@ while run:
 
                 if plane.shell.x != -1:
                     if plane.shell.x != -1 and function.is_shell_collided_with_ship(plane.shell, ship):
-                        Tk().wm_withdraw()  # to hide the main window
-                        messagebox.showinfo('Попадание снаряда!', 'Вы проиграли')
-                        sys.exit()
+                        ship.enabled = False
+                        plane.shell.x = -1
 
                 counter += 1
 
