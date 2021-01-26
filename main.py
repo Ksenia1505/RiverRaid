@@ -2,6 +2,10 @@ import pygame
 import background
 import plane
 import ship
+import function
+
+from tkinter import *
+from tkinter import messagebox
 
 pygame.init()
 background_image = pygame.image.load('images/levels/level_1a.png')
@@ -24,14 +28,23 @@ clock = pygame.time.Clock()
 background = background.Background(bg_x, bg_y, bg_speed, width, height, window, background_image)
 plane = plane.Plane(plane_x, plane_y, window, width, window_height, plane_w, plane_h, plane_image)
 direction = 'left'
-ship_x = width - 500
-ship_y = 0
-ship = ship.Ship(ship_x, ship_y, window, width, direction)
+
+ships = []
+# ship_x = width - 500
+# ship_y = 0
+# ship_x = 500
+# ship_y = 400
+ships.append(ship.Ship(600, 0, window, width, direction, 800))
+ships.append(ship.Ship(0, 0, window, width, direction, 1500))
 
 animCount = 0
 run = True
 bullets = []
 lastMove = ''
+
+a = [[0, 1], [0, 10]]
+b = [[0, 11], [0, 100]]
+c = function.is_line_intersection(a, b)
 
 while run:
     clock.tick(30)
@@ -40,26 +53,55 @@ while run:
             run = False
 
     background.draw()
+    pygame.draw.rect(window, (200, 200, 200),
+                     (plane.x, plane.y, plane.w, plane.h))
     plane.draw()
 
-    if plane.shell.x != -1:
-        plane.shell.draw()
-        if plane.shell.y > plane.shell.radius * 5:
-            plane.shell.y -= plane.shell.radius * 5
-        else:
-            plane.shell.x = -1
+    # if plane.shell.x != -1:
+    #     plane.shell.draw()
+    #     if plane.shell.y > plane.shell.radius * 2:
+    #         plane.shell.y -= plane.shell.radius * 2
+    #     else:
+    #         plane.shell.x = -1
 
-    if ship.enabled:
-        ship.draw()
-        ship.y += bg_speed
-        if ship.direction == 'left':
-            ship.x = max(0, ship.x - ship.speed_x)
-            if ship.x == 0:
-                ship.direction = 'right'
-        else:
-            ship.x = min(width - ship.width, ship.x + ship.speed_x)
-            if ship.x == width - ship.width:
-                ship.direction = 'left'
+    for ship in ships:
+        if ship.enabled and ship.start_y <= (background.height + background.y) and ship.y < window_height:
+            pygame.draw.rect(window, (255, 255, 255),
+                             (ship.x, ship.y, ship.w, ship.h))
+            ship.draw()
+
+            if function.is_plane_collided_with_ship(plane, ship, background):
+                Tk().wm_withdraw()  # to hide the main window
+                messagebox.showinfo('Столкновение!', 'Вы проиграли')
+                sys.exit()
+
+            counter = 1
+            while counter <= 5:
+                if plane.shell.x != -1:
+                    plane.shell.draw()
+                    if plane.shell.y > plane.shell.radius:
+                        plane.shell.y -= plane.shell.radius
+                    else:
+                        plane.shell.x = -1
+
+                if plane.shell.x != -1:
+                    if plane.shell.x != -1 and function.is_shell_collided_with_ship(plane.shell, ship):
+                        Tk().wm_withdraw()  # to hide the main window
+                        messagebox.showinfo('Попадание снаряда!', 'Вы проиграли')
+                        sys.exit()
+
+                counter += 1
+
+            ship.y += bg_speed
+
+            if ship.direction == 'left':
+                ship.x = max(0, ship.x - ship.speed_x)
+                if ship.x == 0:
+                    ship.direction = 'right'
+            else:
+                ship.x = min(width - ship.w, ship.x + ship.speed_x)
+                if ship.x == width - ship.w:
+                    ship.direction = 'left'
 
     pygame.display.update()
 

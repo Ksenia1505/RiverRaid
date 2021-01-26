@@ -1,6 +1,7 @@
 import pygame
 import shell
 
+
 class Plane:
     def __init__(self, x, y, window, window_width, window_height, w, h, plane_image):
         self.x = x
@@ -14,6 +15,10 @@ class Plane:
         self.shell = shell.Shell(-1, -1, self.window_height, self.window)
         self.plane_image = plane_image
 
+        self.point_1 = []
+        self.point_2 = []
+        self.point_3 = []
+        self.point_4 = []
 
     def draw(self):
         keys = pygame.key.get_pressed()
@@ -23,11 +28,6 @@ class Plane:
             self.x = min(self.x + 7, self.window_width - 5 - self.w)
         elif keys[pygame.K_SPACE]:
             if self.shell.x == -1:
-                self.shell = shell.Shell(self.x + self.w // 2, self.window_height - self.h, self.window_height, self.window)
+                self.shell = shell.Shell(self.x + self.w // 2, self.window_height - self.h, self.window_height,
+                                         self.window)
         self.window.blit(self.plane_image, (self.x, self.y))
-
-
-
-
-
-
